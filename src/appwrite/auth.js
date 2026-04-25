@@ -32,16 +32,31 @@ export class AuthService {
 
     async login({email, password}){
         try{
-            return await this.account.createEmailSession(email, password);
+            if (typeof this.account.createEmailPasswordSession === 'function') {
+                return await this.account.createEmailPasswordSession(email, password);
+            }
+
+            // Backward compatibility with older Appwrite SDK versions.
+            if (typeof this.account.createEmailSession === 'function') {
+                return await this.account.createEmailSession(email, password);
+            }
+
+            throw new Error('No compatible Appwrite email session API found in current SDK.');
         }catch(error){
             console.log("Appwrite service :: login :: error", error);
+            throw error;
         }
     }
 
     async getCurrentUser(){
         try{
-            return await this.account.get();
+            const user = await this.account.get();
+            return JSON.parse(JSON.stringify(user));
         }catch(error){
+            if (error?.code === 401) {
+                return null;
+            }
+
             console.log("Appwrite service :: getCurrentUser :: error", error);
         }
 
@@ -53,6 +68,7 @@ export class AuthService {
             return await this.account.deleteSessions();
         }catch(error){
             console.log("Appwrite service :: logout :: error", error);
+            throw error;
         }
     }
 }

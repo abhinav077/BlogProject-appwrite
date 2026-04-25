@@ -10,12 +10,12 @@ export class Service{
         this.client
             .setEndpoint(conf.appwriteUrl)
             .setProject(conf.appwriteProjectId)
-        this.databases = new Databases (this.client);
-        this.bucket = new Bucket (this.client);
+        this.databases = new Databases(this.client);
+        this.bucket = new Storage(this.client);
 
     }
 
-    async createPost(title, slug, content, featuredImage, status, UserId){
+    async createPost({title, slug, content, featuredImage, status, userId}){
         try {
             return await this.databases.createDocument(
                 conf.appwriteDatabaseId,
@@ -26,7 +26,7 @@ export class Service{
                     content,
                     featuredImage,
                     status,
-                    UserId,
+                    userId,
                 }
             )
             
@@ -129,5 +129,4 @@ export class Service{
 }
 
 const service = new Service();
-
-export class service
+export default service;

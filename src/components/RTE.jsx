@@ -18,6 +18,7 @@ export default function RTE({name, control, label, defaultValue=""}) {
           initialValue: defaultValue,  
           height: 500,
           menubar: false,
+          apiKey: '',
           plugins: [
             'image advlist autolink lists link image charmap print preview anchor',
             'searchreplace visualblocks code fullscreen',
@@ -29,7 +30,7 @@ export default function RTE({name, control, label, defaultValue=""}) {
           'removeformat | help',
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
         }}
-        onEditorChange={(content, editor) => onChange(content)}
+        onEditorChange={(content) => onChange(content)}
       />
     )}
     />
